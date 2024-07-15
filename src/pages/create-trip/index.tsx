@@ -92,15 +92,18 @@ export function CreateTripPage() {
     if (!ownerName || !ownerEmail) {
       return
     }
-
+    const token = localStorage.getItem('TOKEN_KEY'); 
     const response = await api.post('/trips', {
       destination,
-      starts_at: eventStartAndEndDates.from,
-      ends_at: eventStartAndEndDates.to,
+      starts_at: eventStartAndEndDates?.from,
+      ends_at: eventStartAndEndDates?.to,
       emails_to_invite: emailsToInvite,
-      owner_name: ownerName,
-      owner_email: ownerEmail
-    })
+    }, {
+      headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+      }
+    });
 
     const { tripId } = response.data
 
