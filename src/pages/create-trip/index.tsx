@@ -6,24 +6,30 @@ import { DestinationAndDateStep } from "./steps/destination-and-date-step";
 import { InviteGuestsStep } from "./steps/invite-guests-step";
 import { DateRange } from "react-day-picker";
 import { api } from "../../lib/axios";
+import { LoginPage } from "../user-session/login";
 
 export function CreateTripPage() {
   const navigate = useNavigate()
   const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false)
   const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false)
   const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [emailsToInvite, setEmailsToInvite] = useState([
     'diego@rocketseat.com.br',
     'john@acme.com'
   ])
 
   const [destination, setDestination] = useState('')
-  const [ownerName, setOwnerName] = useState('')
-  const [ownerEmail, setOwnerEmail] = useState('')
   const [eventStartAndEndDates, setEventStartAndEndDates] = useState<DateRange | undefined>()
 
+
   function openGuestsInput() {
-    setIsGuestsInputOpen(true)
+    if(localStorage.getItem("TOKEN_KEY") !== null){
+
+      setIsGuestsInputOpen(true)
+    } else {
+      openLoginModal()
+    }
   }
 
   function closeGuestsInput() {
@@ -44,6 +50,14 @@ export function CreateTripPage() {
 
   function closeConfirmTripModal() {
     setIsConfirmTripModalOpen(false)
+  }
+
+  function openLoginModal() {
+    setIsLoginOpen(true)
+  }
+
+  function closeLoginModal() {
+    setIsLoginOpen(false)
   }
 
   function addNewEmailToInvite(event: FormEvent<HTMLFormElement>) {
@@ -74,8 +88,7 @@ export function CreateTripPage() {
     setEmailsToInvite(newEmailList)
   }
 
-  async function createTrip(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  async function createTrip() {
 
     if (!destination) {
       return
@@ -89,9 +102,6 @@ export function CreateTripPage() {
       return
     }
 
-    if (!ownerName || !ownerEmail) {
-      return
-    }
     const token = localStorage.getItem('TOKEN_KEY'); 
     const response = await api.post('/trips', {
       destination,
@@ -111,6 +121,11 @@ export function CreateTripPage() {
   }
 
   return (
+    <div>
+      {isLoginOpen && <LoginPage
+      closeLoginModal={closeLoginModal}
+       />}
+
     <div className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
       <div className="max-w-3xl w-full px-6 text-center space-y-10">
         <div className="flex flex-col items-center gap-3">
@@ -119,6 +134,7 @@ export function CreateTripPage() {
             Convide seus amigos e planeje sua próxima viagem!
           </p>
         </div>
+
 
         <div className="space-y-4">
           <DestinationAndDateStep 
@@ -158,10 +174,13 @@ export function CreateTripPage() {
         <ConfirmTripModal 
           closeConfirmTripModal={closeConfirmTripModal}
           createTrip={createTrip}
-          setOwnerName={setOwnerName}
-          setOwnerEmail={setOwnerEmail}
+          destination={destination}
+          eventStartAndEndDates={eventStartAndEndDates}
+          emailsToInvite={emailsToInvite}
+
         />
       )}
+    </div>
     </div>
   );
 }

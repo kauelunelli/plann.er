@@ -23,7 +23,7 @@ export function Activities() {
   }, [tripId])
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 h-3/4 overflow-auto">
       {activities.map(category => {
         return (
           <div key={category.date} className="space-y-2.5">
