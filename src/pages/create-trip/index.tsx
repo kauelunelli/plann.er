@@ -8,6 +8,7 @@ import { DateRange } from "react-day-picker";
 import { api } from "../../lib/axios";
 import { LoginPage } from "../user-session/login";
 import { Button } from "../../components/button";
+import { SignupPage } from "../user-session/signup";
 
 export function CreateTripPage() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export function CreateTripPage() {
   const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false);
   const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSingupOpen] = useState(false);
   const [emailsToInvite, setEmailsToInvite] = useState([
     "diego@rocketseat.com.br",
     "john@acme.com",
@@ -34,9 +36,23 @@ export function CreateTripPage() {
     return false;
   }
 
+  function openSignupModal() {
+    setIsLoginOpen(false);
+    setIsSingupOpen(true);
+  }
+  function closeSignupModal() {
+    setIsSingupOpen(false);
+  }
+
   function openGuestsInput() {
     if (isLogged()) {
       setIsGuestsInputOpen(true);
+    }
+  }
+
+  function travelPage() {
+    if (isLogged()) {
+      navigate("/trips");
     }
   }
 
@@ -132,9 +148,15 @@ export function CreateTripPage() {
 
   return (
     <div>
-      {isLoginOpen && <LoginPage closeLoginModal={closeLoginModal} />}
       <div className="fixed end-7 m-10">
-        <Button onClick={isLogged}>Minhas Viagens</Button>
+        {isLoginOpen && (
+          <LoginPage
+            openSignupModal={openSignupModal}
+            closeLoginModal={closeLoginModal}
+          />
+        )}
+        {isSignupOpen && <SignupPage closeSignupModal={closeSignupModal} />}
+        <Button onClick={travelPage}>Minhas Viagens</Button>
       </div>
 
       <div className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
