@@ -1,13 +1,37 @@
 import { X } from "lucide-react";
+import { tv, VariantProps } from "tailwind-variants";
 
-interface ModalProps {
+interface ModalProps extends VariantProps<typeof modalVariants> {
   isOpen: boolean;
   title: string;
+  subtitle?: string;
   onClose: () => void;
   children: React.ReactNode;
 }
 
-export function Modal({ isOpen, title, onClose, children }: ModalProps) {
+const modalVariants = tv({
+  base: "rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5",
+
+  variants: {
+    size: {
+      default: "max-w-md",
+      large: "max-w-xl py-5 px-6",
+    },
+  },
+
+  defaultVariants: {
+    size: "default",
+  },
+});
+
+export function Modal({
+  isOpen,
+  title,
+  subtitle,
+  onClose,
+  children,
+  size,
+}: ModalProps) {
   const handleClose = () => {
     onClose();
   };
@@ -19,24 +43,23 @@ export function Modal({ isOpen, title, onClose, children }: ModalProps) {
   return (
     <div
       tabIndex={-1}
-      className={` ${
-        isOpen
-          ? "flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full animate-fadeIn bg-black bg-opacity-50"
-          : ""
-      }`}
+      className={`fixed inset-0 bg-black/60 flex items-center justify-center z-50`}
     >
-      <div className="relative p-4 w-full max-w-md max-h-full">
-        <div className="relative bg-white rounded-lg shadow dark:bg-zinc-900">
-          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {title}
-            </h3>
+      <div
+        className={`w-full ${modalVariants({
+          size,
+        })}`}
+      >
+        <div className="space-y-2 w-full">
+          <div className="flex items-center justify-between">
+            <h3 className="font-lg font-semibold">{title}</h3>
             <X
               className="end-2.5 rounded-lg hover:bg-gray-600 bg-transparent hover:text-zinc-400 transition-colors duration-300  cursor-pointer"
               onClick={handleClose}
             />
           </div>
-          <div className="p-4 md:p-5">
+          <p className="text-sm text-zinc-400">{subtitle}</p>
+          <div className="pt-4">
             <div className="space-y-4">{children}</div>
           </div>
         </div>
