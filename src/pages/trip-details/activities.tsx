@@ -28,8 +28,9 @@ export function Activities() {
     <div className="space-y-8 overflow-auto h-screen-2/3">
       {activities.length === 0 && (
         <div className=" w-full mt-12">
-          <p className="text-zinc-500 text-center text-xl">Nenhuma atividade cadastrada.</p>
-
+          <p className="text-zinc-500 text-center text-xl">
+            Nenhuma atividade cadastrada.
+          </p>
         </div>
       )}
 
