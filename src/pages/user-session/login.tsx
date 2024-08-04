@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../../lib/axios";
 import { Button } from "../../components/button";
 import Modal from "../../components/modal";
+import { Lock, Mail } from "lucide-react";
 import { Input } from "../../components/input";
 
 interface LoginPageProps {
@@ -23,6 +24,7 @@ export function LoginPage({
       type: "email",
       placeholder: "",
       value: email,
+      icon: Mail,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
       },
@@ -32,6 +34,7 @@ export function LoginPage({
       type: "password",
       placeholder: "",
       value: password,
+      icon: Lock,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
       },
@@ -64,6 +67,7 @@ export function LoginPage({
             type={input.type}
             placeholder={input.placeholder}
             value={input.value}
+            icon={input.icon}
             onChange={input.onChange}
           />
         ))}
@@ -74,7 +78,7 @@ export function LoginPage({
           </a>
         </div>
         <Button onClick={handleLogin} isLoading={isLoading}>
-          Login to your account
+          Entrar na sua conta
         </Button>
         <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
           Não cadastrado?{" "}

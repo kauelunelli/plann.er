@@ -24,6 +24,7 @@ export function Sidebar() {
   const [showTrips, setShowTrips] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSingupOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const token = localStorage.getItem("TOKEN_KEY");
 
   const deleteTrip = (tripId: string) => {
@@ -67,6 +68,13 @@ export function Sidebar() {
   function closeLoginModal() {
     setIsLoginOpen(false);
   }
+
+  const handleMouseEnterToDisplayDelete = (index: number) => {
+    setHoveredIndex(index);
+  };
+  const handleMouseLeaveToDisplayDelete = () => {
+    setHoveredIndex(null);
+  };
 
   useEffect(() => {
     if (token) {
@@ -148,8 +156,14 @@ export function Sidebar() {
             {showTrips && (
               <ol>
                 {user.trips.length > 0 ? (
-                  user.trips.map((trip) => (
-                    <li key={trip.id}>
+                  user.trips.map((trip, index) => (
+                    <li
+                      key={trip.id}
+                      onMouseEnter={() =>
+                        handleMouseEnterToDisplayDelete(index)
+                      }
+                      onMouseLeave={handleMouseLeaveToDisplayDelete}
+                    >
                       <div className="flex items-center justify-between rounded-lg text-white p-2 hover:bg-zinc-700">
                         <a
                           onClick={() => handleChangeTrip(trip.id)}
@@ -158,7 +172,12 @@ export function Sidebar() {
                           <LandPlot className="size-5" />
                           <span className="ms-3">{trip.destination}</span>
                         </a>
-                        <DeleteButton onClick={() => deleteTrip(trip.id)} />
+                        {hoveredIndex === index && (
+                          <DeleteButton
+                            isDisplayed={true}
+                            onClick={() => deleteTrip(trip.id)}
+                          />
+                        )}
                       </div>
                     </li>
                   ))

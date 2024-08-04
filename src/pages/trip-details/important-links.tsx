@@ -1,9 +1,11 @@
-import { Link2, Plus } from "lucide-react";
+import { Book, Link2, Plus } from "lucide-react";
 import { Button } from "../../components/button";
 import { useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 import Modal from "../../components/modal";
 import { useParams } from "react-router-dom";
+import { Input } from "../../components/input";
+import { DeleteButton } from "../../components/deleteButton";
 
 interface Link {
   title: string;
@@ -15,6 +17,7 @@ export function ImportantLinks() {
   const [links, setLinks] = useState<Link[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [title, setTitle] = useState("");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -39,6 +42,15 @@ export function ImportantLinks() {
     }
   };
 
+  const deleteLink = async (tripId: string) => {
+    try {
+      await api.delete(`/trips/${tripId}/links`);
+      setLinks(links.filter((link) => link.title !== title));
+    } catch (error) {
+      console.error("Failed to delete link", error);
+    }
+  };
+
   const closeModalLink = () => {
     setIsOpenModal(false);
   };
@@ -47,35 +59,54 @@ export function ImportantLinks() {
     setIsOpenModal(true);
   };
 
+  const handleMouseEnterToDisplayDelete = (index: number) => {
+    setHoveredIndex(index);
+  };
+  const handleMouseLeaveToDisplayDelete = () => {
+    setHoveredIndex(null);
+  };
+
+  const inputs = [
+    {
+      title: "Título",
+      type: "text",
+      placeholder: "Ex: Documentação da viagem",
+      value: title,
+      icon: Book,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value);
+      },
+    },
+    {
+      title: "URL",
+      type: "text",
+      placeholder: "https://",
+      value: url,
+      icon: Link2,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUrl(e.target.value);
+      },
+    },
+  ];
+
   return (
     <div>
       <Modal isOpen={isOpenModal} title="Novo link" onClose={closeModalLink}>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-zinc-300">
-            Título
-          </label>
-          <input
-            type="text"
-            onChange={(e) => setTitle(e.target.value)}
-            className="text-gray-900 text-base rounded-lg block w-full p-2.5 border-gray-500 dark:placeholder-zinc-400 dark:text-white"
-            placeholder="Ex: Documentação da viagem"
+        {inputs.map((input, index) => (
+          <Input
+            key={index}
+            title={input.title}
+            type={input.type}
+            placeholder={input.placeholder}
+            value={input.value}
+            icon={input.icon}
+            onChange={input.onChange}
           />
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-zinc-300">
-            URL
-          </label>
-          <input
-            type="text"
-            placeholder="https://"
-            onChange={(e) => setUrl(e.target.value)}
-            className="block w-full p-2.5 text-base rounded-lg dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-          />
-        </div>
+        ))}
         <div className="flex justify-between">
           <div className="flex items-start"></div>
         </div>
-        <Button onClick={createLink} isLoading={isLoading}>
+        <Button size="full" onClick={createLink} isLoading={isLoading}>
           Cadastrar link
         </Button>
       </Modal>
@@ -84,9 +115,13 @@ export function ImportantLinks() {
 
         <div className="space-y-5">
           {links.length > 0 ? (
-            links.map((link) => (
-              <div className="flex items-center justify-between gap-4">
-                <div className="space-y-1.5">
+            links.map((link, index) => (
+              <div
+                className="flex items-center gap-4"
+                onMouseEnter={() => handleMouseEnterToDisplayDelete(index)}
+                onMouseLeave={handleMouseLeaveToDisplayDelete}
+              >
+                <div className="space-y-1.5 w-full">
                   <span className="block font-medium text-zinc-100">
                     {link.title}
                   </span>
@@ -97,8 +132,14 @@ export function ImportantLinks() {
                     {link.url}
                   </a>
                 </div>
+                {hoveredIndex === index && (
+                  <DeleteButton
+                    isDisplayed={true}
+                    onClick={() => deleteLink(link.title)}
+                  />
+                )}
 
-                <Link2 className="text-zinc-400 size-5 shrink-0" />
+                <Link2 className="text-zinc-400 size-5 justify-end shrink-0" />
               </div>
             ))
           ) : (

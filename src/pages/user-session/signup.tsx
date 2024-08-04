@@ -27,7 +27,7 @@ export function SignupPage({ closeSignupModal }: signUpPageProps) {
     {
       title: "Email",
       type: "email",
-      placeholder: "",
+      placeholder: "email@example.com",
       value: email,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -36,7 +36,7 @@ export function SignupPage({ closeSignupModal }: signUpPageProps) {
     {
       title: "Senha",
       type: "password",
-      placeholder: "",
+      placeholder: "********",
       value: password,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
