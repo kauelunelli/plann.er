@@ -28,6 +28,7 @@ interface ButtonProps
     VariantProps<typeof buttonVariants> {
   children: ReactNode;
   isLoading?: boolean;
+  isDisabled?: boolean;
 }
 
 export function Button({
@@ -35,10 +36,15 @@ export function Button({
   variant,
   size,
   isLoading,
+  isDisabled,
   ...rest
 }: ButtonProps) {
   return (
-    <button {...rest} className={buttonVariants({ variant, size })}>
+    <button
+      disabled={isDisabled}
+      {...rest}
+      className={buttonVariants({ variant, size })}
+    >
       {isLoading && <Loader2 className="size-5 animate-spin mr-2" />}
       {children}
     </button>
