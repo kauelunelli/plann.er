@@ -1,25 +1,18 @@
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
 
-export function DeleteButton({ onClick }: { onClick: () => void }) {
-  const [deleteOption, setDeleteOption] = useState(false);
+interface DeleteButtonProps {
+  onClick: () => void;
+  isDisplayed: boolean;
+}
 
-  const handleMouseEnter = () => {
-    setDeleteOption(true);
-  }
-  const handleMouseLeave = () => {
-    setDeleteOption(false);
-  }
-
+export function DeleteButton({ onClick, isDisplayed }: DeleteButtonProps) {
   const handleClick = () => {
     onClick();
-  }
+  };
 
   return (
-    <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick} className="size-5">
-      {deleteOption &&
-        <Trash2 className="size-5" />
-      }
+    <button onClick={handleClick} className="size-5">
+      {isDisplayed && <Trash2 className="size-5" />}
     </button>
   );
 }
