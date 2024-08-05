@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { api } from "../../lib/axios";
-import { Button } from "../../components/button";
-import Modal from "../../components/modal";
-import { Input } from "../../components/input";
+import { api } from "@/lib/axios";
+import { Button } from "@/components/button";
+import Modal from "@/components/modal";
+import { Input } from "@/components/input";
 
 interface signUpPageProps {
   closeSignupModal: () => void;

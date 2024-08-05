@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { api } from "../../lib/axios";
-import { DeleteButton } from "../../components/deleteButton";
+import { api } from "@/lib/axios";
+import { DeleteButton } from "@/components/deleteButton";
 import { LandPlot, LogOut, Plane, Plus, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import { LoginPage } from "./login";
 import { SignupPage } from "./signup";
 
