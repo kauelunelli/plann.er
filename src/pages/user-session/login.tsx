@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { api } from "../../lib/axios";
-import { Button } from "../../components/button";
-import Modal from "../../components/modal";
+import { api } from "@/lib/axios";
+import { Button } from "@/components/button";
+import Modal from "@/components/modal";
 import { Lock, Mail } from "lucide-react";
-import { Input } from "../../components/input";
+import { Input } from "@/components/input";
 
 interface LoginPageProps {
   closeLoginModal: () => void;

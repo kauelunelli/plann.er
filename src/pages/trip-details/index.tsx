@@ -5,8 +5,8 @@ import { ImportantLinks } from "./important-links";
 import { Guests } from "./guests";
 import { Activities } from "./activities";
 import { DestinationAndDateHeader } from "./destination-and-date-header";
-import { Sidebar } from "../user-session/sidebar";
-import { Button } from "../../components/button";
+import { Sidebar } from "@/pages/user-session/sidebar";
+import { Button } from "@/components/button";
 
 export function TripDetailsPage() {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] =
