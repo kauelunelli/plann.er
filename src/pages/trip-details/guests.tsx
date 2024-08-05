@@ -1,8 +1,8 @@
 import { CheckCircle2, CircleDashed, Crown, UserCog } from "lucide-react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { api } from "../../lib/axios";
+import { api } from "@/lib/axios";
 
 interface Participant {
   id: string;
@@ -13,30 +13,37 @@ interface Participant {
 }
 
 export function Guests() {
-  const { tripId } = useParams()
-  const [participants, setParticipants] = useState<Participant[]>([])
+  const { tripId } = useParams();
+  const [participants, setParticipants] = useState<Participant[]>([]);
 
   useEffect(() => {
-    api.get(`trips/${tripId}/participants`).then(response => setParticipants(response.data.participants))
-  }, [tripId])
+    api
+      .get(`trips/${tripId}/participants`)
+      .then((response) => setParticipants(response.data.participants));
+  }, [tripId]);
 
   return (
     <div className="space-y-6">
       <h2 className="font-semibold text-xl">Convidados</h2>
       {participants.length === 0 && (
         <div className=" w-full mt-12">
-          <p className="text-zinc-500 text-md">Nenhum participante cadastrado.</p>
-
+          <p className="text-zinc-500 text-md">
+            Nenhum participante cadastrado.
+          </p>
         </div>
       )}
 
       <div className="space-y-5">
         {participants.map((participant, index) => (
-          <div key={participant.id} className="flex items-center justify-between gap-4">
+          <div
+            key={participant.id}
+            className="flex items-center justify-between gap-4"
+          >
             <div className="space-y-1.5">
-              <span className=" font-medium flex items-center justify-between text-zinc-100">{participant.name ?? `Convidado ${index}`}{participant.is_owner && (
-              <Crown className="size-4" />
-            )}</span>
+              <span className=" font-medium flex items-center justify-between text-zinc-100">
+                {participant.name ?? `Convidado ${index}`}
+                {participant.is_owner && <Crown className="size-4" />}
+              </span>
               <span className="block text-sm text-zinc-400 truncate">
                 {participant.email}
               </span>
@@ -55,5 +62,5 @@ export function Guests() {
         Gerenciar convidados
       </Button>
     </div>
-  )
+  );
 }

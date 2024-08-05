@@ -1,13 +1,14 @@
 import { Book, Link2, Plus } from "lucide-react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import { useEffect, useState } from "react";
-import { api } from "../../lib/axios";
-import Modal from "../../components/modal";
+import { api } from "@/lib/axios";
+import Modal from "@/components/modal";
 import { useParams } from "react-router-dom";
-import { Input } from "../../components/input";
-import { DeleteButton } from "../../components/deleteButton";
+import { Input } from "@/components/input";
+import { DeleteButton } from "@/components/deleteButton";
 
 interface Link {
+  id: string;
   title: string;
   url: string;
 }
@@ -33,8 +34,7 @@ export function ImportantLinks() {
         title,
         url,
       });
-      setLinks([...links, { title, url }]);
-      setIsOpenModal(false);
+      window.location.reload();
     } catch (error) {
       console.error("Failed to create link", error);
     } finally {
@@ -42,10 +42,10 @@ export function ImportantLinks() {
     }
   };
 
-  const deleteLink = async (tripId: string) => {
+  const deleteLink = async (linkId: string) => {
     try {
-      await api.delete(`/trips/${tripId}/links`);
-      setLinks(links.filter((link) => link.title !== title));
+      await api.delete(`/links/${linkId}/remove`);
+      setLinks(links.filter((link) => link.id !== linkId));
     } catch (error) {
       console.error("Failed to delete link", error);
     }
@@ -135,7 +135,7 @@ export function ImportantLinks() {
                 {hoveredIndex === index && (
                   <DeleteButton
                     isDisplayed={true}
-                    onClick={() => deleteLink(link.title)}
+                    onClick={() => deleteLink(link.id)}
                   />
                 )}
 
