@@ -17,6 +17,7 @@ export function CreateTripPage() {
   const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSingupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [emailsToInvite, setEmailsToInvite] = useState([
     "diego@rocketseat.com.br",
     "john@acme.com",
@@ -112,15 +113,19 @@ export function CreateTripPage() {
   }
 
   async function createTrip() {
+    setIsLoading(true);
     if (!destination) {
+      setIsLoading(false);
       return;
     }
 
     if (!eventStartAndEndDates?.from || !eventStartAndEndDates?.to) {
+      setIsLoading(false);
       return;
     }
 
     if (emailsToInvite.length === 0) {
+      setIsLoading(false);
       return;
     }
 
@@ -217,6 +222,7 @@ export function CreateTripPage() {
             createTrip={createTrip}
             destination={destination}
             eventStartAndEndDates={eventStartAndEndDates}
+            isLoading={isLoading}
             emailsToInvite={emailsToInvite}
           />
         )}
