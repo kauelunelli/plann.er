@@ -75,7 +75,12 @@ export function SignupPage({ closeSignupModal }: signUpPageProps) {
           />
         ))}
         <div className="w-full h-px mb-5 bg-zinc-400"></div>
-        <Button isLoading={isLoading} size="full" onClick={handleSignup}>
+        <Button
+          isLoading={isLoading}
+          isDisabled={isLoading}
+          size="full"
+          onClick={handleSignup}
+        >
           Criar conta
         </Button>
       </Modal>

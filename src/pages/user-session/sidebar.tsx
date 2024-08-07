@@ -156,7 +156,7 @@ export function Sidebar() {
             {showTrips && (
               <ol>
                 {user.trips.length > 0 ? (
-                  user.trips.map((trip, index) => (
+                  user.trips.toReversed().map((trip, index) => (
                     <li
                       key={trip.id}
                       onMouseEnter={() =>

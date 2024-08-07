@@ -77,7 +77,11 @@ export function LoginPage({
             Esqueceu a senha?
           </a>
         </div>
-        <Button onClick={handleLogin} isLoading={isLoading}>
+        <Button
+          onClick={handleLogin}
+          isDisabled={isLoading}
+          isLoading={isLoading}
+        >
           Entrar na sua conta
         </Button>
         <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
