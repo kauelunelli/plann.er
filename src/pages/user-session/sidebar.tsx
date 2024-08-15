@@ -89,7 +89,7 @@ export function Sidebar() {
   }, [token]);
 
   return (
-    <div className="z-40 w-1/6 h-screen overflow-y-auto  bg-zinc-800">
+    <div className="z-40 w-1/6 h-screen  bg-zinc-800">
       {isLoginOpen && (
         <LoginPage
           openSignupModal={openSignupModal}
@@ -98,7 +98,7 @@ export function Sidebar() {
       )}
       {isSignupOpen && <SignupPage closeSignupModal={closeSignupModal} />}
       <aside>
-        <div className="h-full px-12 py-8 overflow-y-auto  bg-zinc-800">
+        <div className="h-full px-12 py-8  bg-zinc-800">
           <a href="/" className="flex items-center ps-2.5 mb-5">
             <img src="/logo.svg" alt="plann.er" className="h-6  sm:h-8" />
           </a>
