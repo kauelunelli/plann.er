@@ -6,18 +6,38 @@ import {
 import { CreateTripPage } from "./pages/create-trip";
 import { TripDetailsPage } from "./pages/trip-details";
 import { Sidebar } from "./pages/user-session/sidebar";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { api } from "./lib/axios";
 
-function isAuthenticated() {
-  const token = localStorage.getItem("TOKEN_KEY");
-  if (!token) {
+async function isAuthenticated() {
+  try {
+    await api.get("/authenticate", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("TOKEN_KEY")}`,
+      },
+    });
+    return true;
+  } catch (error) {
     return false;
   }
-  return true;
 }
 
 function RequireAuth({ children }: { children: ReactNode }) {
-  const auth = isAuthenticated();
+  const [auth, setAuth] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      setAuth(authenticated);
+    };
+
+    checkAuth();
+  }, []);
+
+  if (auth === null) {
+    return null; // or a loading spinner or placeholder component
+  }
+
   return auth ? children : <Navigate to="/" replace />;
 }
 
