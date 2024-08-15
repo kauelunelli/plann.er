@@ -130,25 +130,32 @@ export function CreateTripPage() {
     }
 
     const token = localStorage.getItem("TOKEN_KEY");
-    const response = await api.post(
-      "/trips",
-      {
-        destination,
-        starts_at: eventStartAndEndDates?.from,
-        ends_at: eventStartAndEndDates?.to,
-        emails_to_invite: emailsToInvite,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    try {
+      const response = await api.post(
+        "/trips",
+        {
+          destination,
+          starts_at: eventStartAndEndDates?.from,
+          ends_at: eventStartAndEndDates?.to,
+          emails_to_invite: emailsToInvite,
         },
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const { tripId } = response.data;
+      navigate(`/trips/${tripId}`);
 
-    const { tripId } = response.data;
+    } catch(error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false);
+    }
+    
 
-    navigate(`/trips/${tripId}`);
   }
 
   return (
