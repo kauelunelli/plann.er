@@ -17,7 +17,7 @@ function isAuthenticated() {
 }
 
 function RequireAuth({ children }: { children: ReactNode }) {
-  const auth = isAuthenticated(); //
+  const auth = isAuthenticated();
   return auth ? children : <Navigate to="/" replace />;
 }
 
