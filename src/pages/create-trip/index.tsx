@@ -148,14 +148,11 @@ export function CreateTripPage() {
       );
       const { tripId } = response.data;
       navigate(`/trips/${tripId}`);
-
-    } catch(error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
-    
-
   }
 
   return (

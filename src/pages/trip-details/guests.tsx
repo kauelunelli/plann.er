@@ -7,6 +7,17 @@ import Modal from "@/components/modal";
 import { Input } from "@/components/input";
 import { DeleteButton } from "@/components/deleteButton";
 
+interface User {
+  name: string;
+  email: string;
+  trips: Trip[];
+}
+
+interface Trip {
+  id: string;
+  destination: string;
+}
+
 interface Participant {
   id: string;
   name: string | null;
@@ -18,12 +29,25 @@ interface Participant {
 export function Guests() {
   const { tripId } = useParams();
   const [IsOpenModal, setIsOpenModal] = useState(false);
+  const [user, setUser] = useState<User>({ name: "", email: "", trips: [] });
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const token = localStorage.getItem("TOKEN_KEY");
+
+  useEffect(() => {
+    if (token) {
+      api
+        .get("/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => setUser(response.data.user));
+    }
+  }, [token]);
 
   useEffect(() => {
     api
@@ -156,12 +180,13 @@ export function Guests() {
                 </span>
               </div>
               <div className="text-zinc-400 flex space-x-4 shrink-0">
-                {!participant.is_owner && (
-                  <DeleteButton
-                    isDisplayed={true}
-                    onClick={() => deleteGuest(participant.id)}
-                  />
-                )}
+                {!participant.is_owner &&
+                  participants[0].email === user.email && (
+                    <DeleteButton
+                      isDisplayed={true}
+                      onClick={() => deleteGuest(participant.id)}
+                    />
+                  )}
                 {participant.is_confirmed ? (
                   <CheckCircle2 className="text-green-400 size-5 shrink-0" />
                 ) : (
@@ -171,11 +196,12 @@ export function Guests() {
             </div>
           ))}
         </div>
-
-        <Button onClick={openModalGuest} variant="secondary" size="full">
-          <UserCog className="size-5" />
-          Gerenciar convidados
-        </Button>
+        {participants.length > 0 && participants[0].email === user.email && (
+          <Button onClick={openModalGuest} variant="secondary" size="full">
+            <UserCog className="size-5" />
+            Gerenciar convidados
+          </Button>
+        )}
       </div>
     </div>
   );
