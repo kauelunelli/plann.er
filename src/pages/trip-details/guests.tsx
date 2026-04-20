@@ -6,6 +6,7 @@ import { api } from "@/lib/axios";
 import Modal from "@/components/modal";
 import { Input } from "@/components/input";
 import { DeleteButton } from "@/components/deleteButton";
+import { notify } from "@/lib/toast-service";
 
 interface User {
   name: string;
@@ -66,12 +67,21 @@ export function Guests() {
       setParticipants(
         participants.filter((participant) => participant.id !== participantId)
       );
-    } catch (error) {
-      console.error("Failed to delete participant", error);
+    } catch {
     }
   };
 
   const addGuest = async () => {
+    if (!name.trim()) {
+      notify("Informe o nome do convidado.");
+      return;
+    }
+
+    if (!email.trim()) {
+      notify("Informe o e-mail do convidado.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       await api.post(
@@ -88,8 +98,9 @@ export function Guests() {
         }
       );
       window.location.reload();
-    } catch (error) {
-      console.error("Failed to add participant", error);
+    } catch {
+    } finally {
+      setIsLoading(false);
     }
   };
   const closeModalGuest = () => {
