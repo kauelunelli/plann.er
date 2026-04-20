@@ -6,6 +6,7 @@ import Modal from "@/components/modal";
 import { useParams } from "react-router-dom";
 import { Input } from "@/components/input";
 import { DeleteButton } from "@/components/deleteButton";
+import { notify } from "@/lib/toast-service";
 
 interface Link {
   id: string;
@@ -28,6 +29,16 @@ export function ImportantLinks() {
   }, [tripId]);
 
   const createLink = async () => {
+    if (!title.trim()) {
+      notify("Informe um titulo para o link.");
+      return;
+    }
+
+    if (!url.trim()) {
+      notify("Informe a URL do link.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       await api.post(`/trips/${tripId}/links`, {
@@ -35,8 +46,7 @@ export function ImportantLinks() {
         url,
       });
       window.location.reload();
-    } catch (error) {
-      console.error("Failed to create link", error);
+    } catch {
     } finally {
       setIsLoading(false);
     }
@@ -46,8 +56,7 @@ export function ImportantLinks() {
     try {
       await api.delete(`/links/${linkId}/remove`);
       setLinks(links.filter((link) => link.id !== linkId));
-    } catch (error) {
-      console.error("Failed to delete link", error);
+    } catch {
     }
   };
 
