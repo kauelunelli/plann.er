@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/button";
 import { LoginPage } from "./login";
 import { SignupPage } from "./signup";
+import { notify } from "@/lib/toast-service";
 
 interface User {
   name: string;
@@ -39,15 +40,33 @@ export function Sidebar() {
           ...prevState,
           trips: prevState.trips.filter((trip) => trip.id !== tripId),
         }));
+      })
+      .catch(() => {
       });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (!token) {
       navigate("/");
+      return;
     }
-    localStorage.removeItem("TOKEN_KEY");
-    navigate("/");
+
+    try {
+      await api.post(
+        "/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch {
+    } finally {
+      localStorage.removeItem("TOKEN_KEY");
+      navigate("/");
+      notify("Sessao encerrada com sucesso.", "info");
+    }
   };
   const handleChangeTrip = (tripId: string) => {
     navigate(`/trips/${tripId}`);
@@ -156,7 +175,7 @@ export function Sidebar() {
             {showTrips && (
               <ol>
                 {user.trips.length > 0 ? (
-                  user.trips.toReversed().map((trip, index) => (
+                  [...user.trips].reverse().map((trip, index) => (
                     <li
                       key={trip.id}
                       onMouseEnter={() =>
