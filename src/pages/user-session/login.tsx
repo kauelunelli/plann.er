@@ -4,6 +4,7 @@ import { Button } from "@/components/button";
 import Modal from "@/components/modal";
 import { Lock, Mail } from "lucide-react";
 import { Input } from "@/components/input";
+import { notify } from "@/lib/toast-service";
 
 interface LoginPageProps {
   closeLoginModal: () => void;
@@ -42,6 +43,11 @@ export function LoginPage({
   ];
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      notify("Informe e-mail e senha para entrar.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await api.post("/login", {
@@ -50,8 +56,7 @@ export function LoginPage({
       });
       localStorage.setItem("TOKEN_KEY", response.data.token);
       closeLoginModal();
-    } catch (error) {
-      console.error("Login failed", error);
+    } catch {
     } finally {
       setIsLoading(false);
     }
