@@ -10,12 +10,22 @@ import { ReactNode, useEffect, useState } from "react";
 import { api } from "./lib/axios";
 
 async function isAuthenticated() {
+  const token = localStorage.getItem("TOKEN_KEY");
+
+  if (!token) {
+    return false;
+  }
+
   try {
-    await api.get("/authenticate", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("TOKEN_KEY")}`,
-      },
-    });
+    await api.get(
+      "/authenticate",
+      {
+        skipErrorToast: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      } as any
+    );
     return true;
   } catch (error) {
     return false;
