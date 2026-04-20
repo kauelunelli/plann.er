@@ -9,6 +9,7 @@ import { api } from "../../lib/axios";
 import { LoginPage } from "../user-session/login";
 import { Button } from "../../components/button";
 import { SignupPage } from "../user-session/signup";
+import { notify } from "@/lib/toast-service";
 
 export function CreateTripPage() {
   const navigate = useNavigate();
@@ -115,16 +116,19 @@ export function CreateTripPage() {
   async function createTrip() {
     setIsLoading(true);
     if (!destination) {
+      notify("Informe o destino da viagem.");
       setIsLoading(false);
       return;
     }
 
     if (!eventStartAndEndDates?.from || !eventStartAndEndDates?.to) {
+      notify("Selecione data de inicio e fim da viagem.");
       setIsLoading(false);
       return;
     }
 
     if (emailsToInvite.length === 0) {
+      notify("Adicione pelo menos um convidado para continuar.");
       setIsLoading(false);
       return;
     }
@@ -148,8 +152,7 @@ export function CreateTripPage() {
       );
       const { tripId } = response.data;
       navigate(`/trips/${tripId}`);
-    } catch (error) {
-      console.log(error);
+    } catch {
     } finally {
       setIsLoading(false);
     }
