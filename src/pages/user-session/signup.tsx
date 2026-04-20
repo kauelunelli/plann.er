@@ -3,6 +3,7 @@ import { api } from "@/lib/axios";
 import { Button } from "@/components/button";
 import Modal from "@/components/modal";
 import { Input } from "@/components/input";
+import { notify } from "@/lib/toast-service";
 
 interface signUpPageProps {
   closeSignupModal: () => void;
@@ -45,6 +46,11 @@ export function SignupPage({ closeSignupModal }: signUpPageProps) {
   ];
 
   const handleSignup = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      notify("Preencha nome, e-mail e senha para criar a conta.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await api.post("/singup", {
@@ -54,8 +60,7 @@ export function SignupPage({ closeSignupModal }: signUpPageProps) {
       });
       localStorage.setItem("TOKEN_KEY", response.data.token);
       closeSignupModal();
-    } catch (error) {
-      console.error("Falha ao criar usuario", error);
+    } catch {
     } finally {
       setIsLoading(false);
     }
